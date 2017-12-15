@@ -27,3 +27,5 @@ dependencies:
 
   - role: network_plugin/cloud
     when: kube_network_plugin == 'cloud'
+  - role: network_plugin/ovs
+    when: kube_network_plugin == 'ovs'

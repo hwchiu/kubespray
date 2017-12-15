@@ -1,0 +1,27 @@
+---
+- name: OVS | Copy cni plugins from hyperkube
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d/:/etc/cni/net.d/ hwchiu/ovs-cni:latest central-cluster {{ etcd_address }}"
+  register: cni_task_result
+  until: cni_task_result.rc == 0
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  changed_when: false
+
+- name: OVS | Set cni directory permissions
+  file:
+    path: /opt/cni/bin
+    state: directory
+    owner: kube
+    recurse: true
+    mode: "u=rwX,g-rwx,o-rwx"
+
+- name: Install OpenvSwitch on ubuntu
+  apt:
+      name: openvswitch-switch
+      state: present
+- name: service | Ensuring OVS Service Is Started And Enabled On Boot
+  service:
+    name: "openvswitch-switch"
+    state: "started"
+    enabled: true
+  become: true
