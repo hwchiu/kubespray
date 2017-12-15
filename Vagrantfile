@@ -30,7 +30,7 @@ $shared_folders = {}
 $forwarded_ports = {}
 $subnet = "172.17.8"
 $os = "ubuntu"
-$network_plugin = "flannel"
+$network_plugin = "cloud"
 # The first three nodes are etcd servers
 $etcd_instances = $num_instances
 # The first two nodes are kube masters
