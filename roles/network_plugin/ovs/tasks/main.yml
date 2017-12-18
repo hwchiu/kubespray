@@ -1,4 +1,7 @@
 ---
+- name: Creates directory
+  file: path=/opt/ovs/conf state=directory
+
 - name: Cloud | Copy cni plugins from hyperkube
   command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/cnibindir {{ hyperkube_image_repo }}:{{ hyperkube_image_tag }} /bin/cp -r /opt/cni/bin/. /cnibindir/"
   register: cni_task_result
@@ -8,9 +11,17 @@
   changed_when: false
 
 - name: OVS | Copy OVS cni from docker image
-  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d/:/etc/cni/net.d/ hwchiu/ovs-cni:latest central-cluster {{ etcd_address }}"
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /opt/ovs/conf:/opt/cni hwchiu/ovs-cni:latest -t multus-cluster -b /opt/cni/bin -i {{ etcd_address }} -c /opt/cni/"
   register: ovs_cni_task_result
   until: ovs_cni_task_result.rc == 0
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  changed_when: false
+
+- name: Multus-CNI | Copy Multus-CNI
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d:/opt/cni/conf -v /opt/ovs/conf:/opt/cni/yaml hwchiu/docker-multus-cni:latest -b /opt/cni/bin -c /opt/cni/conf -k /opt/cni/yaml"
+  register: multus_cni_task_result
+  until: multus_cni_task_result.rc == 0
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
   changed_when: false
