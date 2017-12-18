@@ -24,3 +24,8 @@ dependencies:
     when: kube_network_plugin == 'weave'
     tags:
       - weave
+  - role: kubernetes-apps/network_plugin/ovs
+    when: kube_network_plugin == 'ovs'
+    tags:
+      - ovs
+

@@ -1,0 +1,19 @@
+---
+- name: mutlus create CRD
+  command: "{{ bin_dir }}/kubectl create -f /opt/ovs/conf/crdnetwork.yaml"
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  register: create_multus_crd
+  until: create_multus_crd.rc == 0
+  changed_when: False
+  when: inventory_hostname == groups['kube-master'][0]
+
+
+- name: create ovs for multus network object
+  command: "{{ bin_dir }}/kubectl create -f /opt/ovs/conf/ovs-network.yaml"
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  register: create_ovs_network
+  until: create_ovs_network.rc == 0
+  changed_when: False
+  when: inventory_hostname == groups['kube-master'][0]
