@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: busybox-deployment
+spec:
+  selector:
+    matchLabels:
+      app: busybox
+  replicas: 5
+  template:
+    metadata:
+      annotations:
+        networks: '[  
+             { "name": "ovs-second-net" },
+             { "name": "ovs-third-net" } 
+            ]'
+      labels:
+        app: busybox
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+          - sleep
+          - "3600"
+

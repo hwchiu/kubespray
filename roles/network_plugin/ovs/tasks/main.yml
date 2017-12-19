@@ -11,7 +11,7 @@
   changed_when: false
 
 - name: OVS | Copy OVS cni from docker image
-  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /opt/ovs/conf:/opt/cni hwchiu/ovs-cni:latest -t multus-cluster -b /opt/cni/bin -i {{ etcd_address }} -c /opt/cni/"
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin hwchiu/ovs-cni:latest -b /opt/cni/bin"
   register: ovs_cni_task_result
   until: ovs_cni_task_result.rc == 0
   retries: 4

@@ -1,4 +1,12 @@
 ---
+- name: Your copy task
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: 'busybox.yaml', dest: '/home/vagrant/busybox.yaml' }
+    - { src: 'default-pod.yaml', dest: '/home/vagrant/default-pod.yaml' }
+    - { src: 'ovs-second.yaml', dest: '/home/vagrant/ovs-second.yaml' }
+    - { src: 'ovs-third.yaml', dest: '/home/vagrant/ovs-third.yaml' }
+
 - name: mutlus create CRD
   command: "{{ bin_dir }}/kubectl create -f /opt/ovs/conf/crdnetwork.yaml"
   retries: 4
@@ -9,11 +17,20 @@
   when: inventory_hostname == groups['kube-master'][0]
 
 
-- name: create ovs for multus network object
-  command: "{{ bin_dir }}/kubectl create -f /opt/ovs/conf/ovs-network.yaml"
+- name: create ovs_second for multus network object
+  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-second.yaml"
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
-  register: create_ovs_network
-  until: create_ovs_network.rc == 0
+  register: create_ovs_second_network
+  until: create_ovs_second_network.rc == 0
+  changed_when: False
+  when: inventory_hostname == groups['kube-master'][0]
+
+- name: create ovs_third for multus network object
+  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-third.yaml"
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  register: create_ovs_third_network
+  until: create_ovs_third_network.rc == 0
   changed_when: False
   when: inventory_hostname == groups['kube-master'][0]
