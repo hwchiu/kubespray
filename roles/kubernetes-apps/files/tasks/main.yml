@@ -1,0 +1,13 @@
+---
+- name: fetch the kubeconfig from master server
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: files/admin.conf
+    flat: yes
+  when: inventory_hostname == groups['kube-master'][0]
+
+- name: copy the kubeconfig from master to minion node
+  copy:
+    src: files/admin.conf
+    dest: /etc/kubernetes/admin.conf
+  when: inventory_hostname not in groups['kube-master']

@@ -1,5 +1,5 @@
 ---
-- name: Your copy task
+- name: Copy testing files
   copy: src={{ item.src }} dest={{ item.dest }}
   with_items:
     - { src: 'busybox.yaml', dest: '/home/vagrant/busybox.yaml' }
