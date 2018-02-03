@@ -4,8 +4,16 @@
   with_items:
     - { src: 'busybox.yaml', dest: '/home/vagrant/busybox.yaml' }
     - { src: 'default-pod.yaml', dest: '/home/vagrant/default-pod.yaml' }
-    - { src: 'ovs-second.yaml', dest: '/home/vagrant/ovs-second.yaml' }
-    - { src: 'ovs-third.yaml', dest: '/home/vagrant/ovs-third.yaml' }
+
+- name: ovs | Lay out manifests
+  template:
+    src: "{{item.file}}.j2"
+    dest: "/home/vagrant/{{item.file}}"
+  with_items:
+    - {name: second-network, file: ovs-second.yml, type: deployment }
+    - {name: third-network, file: ovs-third.yml, type: deployment }
+  register: manifests
+  when: inventory_hostname == groups['kube-master'][0]
 
 - name: mutlus create CRD
   command: "{{ bin_dir }}/kubectl create -f /opt/ovs/conf/crdnetwork.yaml"
@@ -18,7 +26,7 @@
 
 
 - name: create ovs_second for multus network object
-  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-second.yaml"
+  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-second.yml"
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
   register: create_ovs_second_network
@@ -27,7 +35,7 @@
   when: inventory_hostname == groups['kube-master'][0]
 
 - name: create ovs_third for multus network object
-  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-third.yaml"
+  command: "{{ bin_dir }}/kubectl create -f /home/vagrant/ovs-third.yml"
   retries: 4
   delay: "{{ retry_stagger | random + 3 }}"
   register: create_ovs_third_network
