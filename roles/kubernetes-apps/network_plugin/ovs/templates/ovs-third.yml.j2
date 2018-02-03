@@ -1,0 +1,21 @@
+apiVersion: "kubernetes.com/v1"
+kind: Network
+metadata:
+  name: ovs-third-net
+plugin: ovs
+args: '[
+        {
+        "name": "myovsnet",
+        "type": "ovs",
+        "ovsBridge":"br2",
+        "ipam":{
+               "type":"centralip",
+               "ipType": "cluster",
+               "network":"10.145.0.0/16",
+               "etcdURL": "https://{{etcd_access_address }}:2379",
+               "etcdCertFile": "/etc/ovs/certs/cert.crt",
+               "etcdKeyFile": "/etc/ovs/certs/key.pem",
+               "etcdTrustedCAFileFile": "/etc/ovs/certs/ca_cert.crt"
+        }
+        }
+]'
