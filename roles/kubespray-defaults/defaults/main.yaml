@@ -289,11 +289,11 @@ kube_apiserver_client_key: |-
 is_etcd_master: "{{ inventory_hostname in groups['etcd'] }}"
 etcd_address: "{{ ip | default(ansible_default_ipv4['address']) }}"
 etcd_access_address: "{{ access_ip | default(etcd_address) }}"
-etcd_peer_url: "http://{{ etcd_access_address }}:2380"
-etcd_client_url: "http://{{ etcd_access_address }}:2379"
+etcd_peer_url: "https://{{ etcd_access_address }}:2380"
+etcd_client_url: "https://{{ etcd_access_address }}:2379"
 etcd_access_addresses: |-
   {% for item in groups['etcd'] -%}
-    http://{{ hostvars[item]['access_ip'] | default(hostvars[item]['ip'] | default(hostvars[item]['ansible_default_ipv4']['address'])) }}:2379{% if not loop.last %},{% endif %}
+    https://{{ hostvars[item]['access_ip'] | default(hostvars[item]['ip'] | default(hostvars[item]['ansible_default_ipv4']['address'])) }}:2379{% if not loop.last %},{% endif %}
   {%- endfor %}
 etcd_member_name: |-
   {% for host in groups['etcd'] %}
@@ -301,5 +301,5 @@ etcd_member_name: |-
   {% endfor %}
 etcd_peer_addresses: |-
   {% for item in groups['etcd'] -%}
-    {{ "etcd"+loop.index|string }}=http://{{ hostvars[item].access_ip | default(hostvars[item].ip | default(hostvars[item].ansible_default_ipv4['address'])) }}:2380{% if not loop.last %},{% endif %}
+    {{ "etcd"+loop.index|string }}=https://{{ hostvars[item].access_ip | default(hostvars[item].ip | default(hostvars[item].ansible_default_ipv4['address'])) }}:2380{% if not loop.last %},{% endif %}
   {%- endfor %}
