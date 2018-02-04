@@ -1,6 +1,11 @@
 ---
 - name: Creates directory
-  file: path=/opt/ovs/conf state=directory
+  file:
+    dest: "/opt/ovs/conf"
+    state: directory
+    mode: 0750
+    owner: root
+    group: root
 
 - name: OVS | Create OVS certs dkrectory
   file:
@@ -38,7 +43,7 @@
   changed_when: false
 
 - name: Multus-CNI | Copy Multus-CNI
-  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d:/opt/cni/conf -v /opt/ovs/conf:/opt/cni/yaml hwchiu/docker-multus-cni:latest -b /opt/cni/bin -k /opt/cni/yaml"
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d:/opt/cni/conf -v /opt/ovs/conf:/opt/cni/yaml hwchiu/docker-multus-cni:latest -b /opt/cni/bin"
   register: multus_cni_task_result
   until: multus_cni_task_result.rc == 0
   retries: 4

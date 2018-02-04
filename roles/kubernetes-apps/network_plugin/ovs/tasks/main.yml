@@ -4,6 +4,7 @@
   with_items:
     - { src: 'busybox.yaml', dest: '/home/vagrant/busybox.yaml' }
     - { src: 'default-pod.yaml', dest: '/home/vagrant/default-pod.yaml' }
+    - { src: 'crdnetwork.yaml', dest: '/opt/ovs/conf/crdnetwork.yaml' }
 
 - name: ovs | cni conf
   template:
