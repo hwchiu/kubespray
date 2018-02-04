@@ -11,3 +11,8 @@
     src: files/admin.conf
     dest: /etc/kubernetes/admin.conf
   when: inventory_hostname not in groups['kube-master']
+
+- name: remove kubeconfig
+  local_action: file path=files/admin.conf state=absent
+  become: no
+  when: inventory_hostname == groups['kube-master'][0]
