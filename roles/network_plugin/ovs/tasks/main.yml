@@ -38,7 +38,7 @@
   changed_when: false
 
 - name: Multus-CNI | Copy Multus-CNI
-  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d:/opt/cni/conf -v /opt/ovs/conf:/opt/cni/yaml hwchiu/docker-multus-cni:latest -b /opt/cni/bin -c /opt/cni/conf -k /opt/cni/yaml"
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/opt/cni/bin -v /etc/cni/net.d:/opt/cni/conf -v /opt/ovs/conf:/opt/cni/yaml hwchiu/docker-multus-cni:latest -b /opt/cni/bin -k /opt/cni/yaml"
   register: multus_cni_task_result
   until: multus_cni_task_result.rc == 0
   retries: 4
