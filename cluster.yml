@@ -109,11 +109,6 @@
     - { role: kubernetes/preinstall, when: "dns_mode != 'none' and resolvconf_mode == 'host_resolvconf'", tags: resolvconf }
   environment: "{{proxy_env}}"
 
-- hosts: kube-node
-  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
-  roles:
-      - { role: kubernetes-apps/files, tags: k8s-config }
-
 - hosts: kube-master[0]
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   roles:

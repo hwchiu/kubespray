@@ -1,7 +1,7 @@
 ---
 dependencies:
   - role: kubernetes-apps/network_plugin/calico
-    when: kube_network_plugin == 'calico'
+    when: kube_network_plugin == 'calico' or kube_network_plugin == 'ovs'
     tags:
       - calico
 

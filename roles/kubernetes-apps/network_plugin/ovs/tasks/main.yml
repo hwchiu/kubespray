@@ -6,15 +6,6 @@
     - { src: 'default-pod.yaml', dest: '/home/vagrant/default-pod.yaml' }
     - { src: 'crdnetwork.yaml', dest: '/opt/ovs/conf/crdnetwork.yaml' }
 
-- name: ovs | cni conf
-  template:
-    src: "{{item.file}}.j2"
-    dest: "/etc/cni/net.d/{{item.file}}"
-  with_items:
-    - {name: mulus-cni, file: multus-cni.conf, type: deployment }
-  register: manifests
-  when: inventory_hostname == groups['kube-master'][0]
-
 - name: ovs | Lay out manifests
   template:
     src: "{{item.file}}.j2"

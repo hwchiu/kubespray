@@ -14,12 +14,6 @@
   delegate_to: "{{ groups['kube-master'][0] }}"
   when: cloud_provider is defined
 
-- name: Calico | Write Calico cni config
-  template:
-    src: "cni-calico.conflist.j2"
-    dest: "/etc/cni/net.d/10-calico.conflist"
-    owner: kube
-
 - name: Calico | Create calico certs directory
   file:
     dest: "{{ calico_cert_dir }}"
