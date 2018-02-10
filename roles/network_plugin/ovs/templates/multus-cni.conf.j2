@@ -1,7 +1,7 @@
 {
     "name": "multus-cni-network",
         "type": "multus",
-        "kubeconfig": "{{ kube_config_dir }}/node-kubeconfig.yaml",
+        "kubeconfig": "/etc/kubernetes/admin.conf",
         "delegates": [{
             "name": "multus-cni",
             "nodename": "{{ ansible_hostname }}",

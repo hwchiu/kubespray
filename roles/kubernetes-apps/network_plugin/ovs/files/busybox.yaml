@@ -1,26 +1,16 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: busybox-deployment
-spec:
-  selector:
-    matchLabels:
-      app: busybox
-  replicas: 5
-  template:
-    metadata:
-      annotations:
-        networks: '[  
-             { "name": "ovs-second-net" },
-             { "name": "ovs-third-net" } 
-            ]'
-      labels:
-        app: busybox
-    spec:
-      containers:
-      - name: busybox
-        image: busybox
-        command:
-          - sleep
-          - "3600"
-
+  name: default-network
+  annotations:
+    networks: '[  
+      { "name": "ovs-second-net" },
+      { "name": "ovs-third-net" } 
+   ]'
+spec:  # specification of the pod's contents
+  containers:
+  - name: default-network
+    image: "busybox"
+    command: ["top"]
+    stdin: true
+    tty: true
